@@ -1,0 +1,39 @@
+<!-- templates/register.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Registration</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main2.css') }}">
+</head>
+<body>
+
+  <header>
+    <nav>
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="/login">Login</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1> Registration</h1>
+
+    <form method="post" action="{{ url_for('register') }}">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+
+      <button type="submit">Register</button>
+    </form>
+
+    {% if errors %}
+      <div class="error">{{ errors }}</div>
+    {% endif %}
+
+  </main>
+
+</body>
+</html>

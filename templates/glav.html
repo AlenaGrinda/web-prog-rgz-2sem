@@ -1,0 +1,30 @@
+<!-- templates/glav.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='glav.css') }}">
+</head>
+<body>
+
+    <header>
+            <div class="user-info" style="z-index: -1;">
+                <p>{{ username }}!</p>
+            </div>
+        <h1>H E A R T H U B</h1>
+    </header>
+    <main>
+        <ul>
+            <li><a style="color: aliceblue;font-size: 30px; text-decoration: none;" href="{{ url_for('edit_anketa') }}">Редактировать свою анкету</a></li>
+            <li><a style="color: aliceblue;font-size: 30px;text-decoration: none;" href="{{ url_for('hide_anketa') }}">Спрятать свою анкету</a></li> 
+            <li><a style="color: aliceblue;font-size: 30px;text-decoration: none;" href="{{ url_for('view_anketa') }}">Просмотр анкет</a></li>
+            <li><a style="color: aliceblue;font-size: 30px;text-decoration: none;" href="{{ url_for('delete_account') }}">Удалить свой аккаунт</a></li>
+        </ul>
+    </main>
+    <footer>
+       <nav><a href="{{ url_for('logout') }}">Выйти</a> </nav>
+    </footer>
+</body>
+</html>

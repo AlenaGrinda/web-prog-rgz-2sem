@@ -1,0 +1,24 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Flask App</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+
+  <header>
+    <nav>
+      <a href="/login">Login</a>
+      <a href="{{ url_for('register') }}">Register</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>H E A R T H U B</h2>
+  </main>
+
+</body>
+</html>

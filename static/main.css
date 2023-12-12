@@ -1,0 +1,58 @@
+/* static/css/main.css */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #4b0082; /* темно-фиолетовый цвет для body */
+  }
+  
+  header {
+    padding: 10px;
+    text-align: center;
+    font-size: 30px;
+    color: #fff;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+   
+  }
+  
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  nav a:hover {
+    background-color: #ff009d; /* средне-синий цвет для hover */
+    color: #ffffff;
+    
+  }
+  
+  main {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  /* Дополнительные стили для фонового изображения */
+  body {
+    background: url('/static/glav.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+  
+main h2 {
+    color: #ff009d;
+    font-size: 900%; /* изменено: размер текста увеличен */
+    margin-bottom: 40px; /* добавлено: отступ снизу */
+    text-shadow: 3px 4px 5px  rgb(255, 255, 255);/* добавлено: тень текста */
+    margin-top: 20%; /* добавлено: отступ сверху */
+}
+
+ 

@@ -1,0 +1,40 @@
+<!-- templates/edit_anketa.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Anketa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit.css') }}">
+</head>
+<body>
+    <h1  style="  color: #ff009d;
+    font-size: 200%; /* изменено: размер текста увеличен */
+    text-shadow: 3px 4px 5px  rgb(255, 255, 255); text-align: center;">Edit Anketa</h1>
+
+    <form method="post" action="{{ url_for('edit_anketa') }}" enctype="multipart/form-data">
+        <label for="new_age">New Age:</label>
+        <input type="text" id="new_age" name="new_age" value="{{ current_anketa.age }}">
+        <br>
+        <label for="new_gender">New Gender:</label>
+        <select id="new_gender" name="new_gender">
+            <option value="male" {% if current_anketa.gender == 'male' %}selected{% endif %}>Male</option>
+            <option value="female" {% if current_anketa.gender == 'female' %}selected{% endif %}>Female</option>
+        </select>
+        <br>
+        <label for="new_search_gender">New Search Gender:</label>
+        <select id="new_search_gender" name="new_search_gender">
+            <option value="male" {% if current_anketa.search_gender == 'male' %}selected{% endif %}>Male</option>
+            <option value="female" {% if current_anketa.search_gender == 'female' %}selected{% endif %}>Female</option>
+        </select>
+        <br>
+        <label for="new_about_me">New About Me:</label>
+        <textarea id="new_about_me" name="new_about_me">{{ current_anketa.about_me }}</textarea>
+        <br>
+        <label for="photo">New Photo:</label>
+        <input type="file" id="photo" name="photo">
+        <br>
+        <button  type="submit" value="Save">Save</button>
+    </form>
+</body>
+</html>

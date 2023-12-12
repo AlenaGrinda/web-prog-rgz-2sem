@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit.css') }}">
+</head>
+<body>
+    <h1>Поиск анкет</h1>
+
+    
+    <form method="post" action="{{ url_for('search_anketa') }}">
+        <label for="search_gender">Пол для поиска:</label>
+        <select id="search_gender" name="search_gender">
+            <option value="male">Мужской</option>
+            <option value="female">Женский</option>
+        </select>
+
+        <button type="submit">Поиск</button>
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!-- templates/show_anketa.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Anketa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <h1>Show Anketa</h1>
+    <p>Вы просматриваете анкету пользователя {{ username }}.</p>
+
+    {% if is_owner %}
+        <p>Ваша анкета уже открыта.</p>
+    {% else %}
+        <form method="post" action="{{ url_for('open_anketa') }}">
+            <input type="submit" value="Открыть анкету">
+        </form>
+    {% endif %}
+</body>
+</html>
+
+

@@ -1,0 +1,51 @@
+<!-- anketa.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anketa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main2.css') }}">
+</head>
+<body>
+    <main>
+        <h1>H E A R T H U B</h1>
+        <h2>Анкета</h2>
+            <form style="font-size: 20px;" method="post" action="{{ url_for('anketa') }}" enctype="multipart/form-data">
+                <div>
+                    <label for="username">Имя:</label>
+                    <input type="text" id="username" name="username" required>
+                <div>
+                    <label for="age">Возраст:</label>
+                    <input type="text" id="age" name="age" required>
+                </div>
+                <div>
+                    <label for="gender">Ваш пол:</label>
+                    <select id="gender" name="gender" required>
+                        <option value="male">Мужской</option>
+                        <option value="female">Женский</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="search_gender">Пол для поиска:</label>
+                    <select id="search_gender" name="search_gender" required>
+                        <option value="male">Мужской</option>
+                        <option value="female">Женский</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="about_me">О себе:</label>
+                    <textarea id="about_me" name="about_me"></textarea>
+                </div>
+                <div>
+                    <label for="photo">Фотография:</label>
+                    <input type="file" id="photo" name="photo" accept="image/*">            
+                </div>
+                <div>
+                    <input style="color: aliceblue; background-color: rgb(255, 0, 149);" type="submit" value="Сохранить">
+                </div>
+            </form>
+    </main>
+</body>
+</html>

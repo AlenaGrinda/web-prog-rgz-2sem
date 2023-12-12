@@ -1,0 +1,58 @@
+<!-- view_other_anketa.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Просмотр анкет</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit.css') }}">
+</head>
+<body>
+
+    <header>
+            <div class="user-info">
+                <p>{{ session['username'] }}</p>
+            </div>
+            
+        
+    </header>
+
+    <main>
+        <h1>H E A R T H U B</h1>
+        <h2>Просмотр анкет</h2>
+
+        <div class="anketa-container">
+            {% for anketa in anketa_list %}
+                <div class="anketa">
+                    <p>Имя: {{ anketa[0] }}</p>
+                    <p>Возраст: {{ anketa[1] }}</p>
+                    <p>Пол: {{ anketa[2] }}</p>
+                    <p>О себе: {{ anketa[3] }}</p>
+                    <img src="{{ url_for('static', filename='photo/' + anketa[4].split('/')[-1]) }}" alt="photo">
+
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if anketa_list %}
+        {% if anketa_list|length == limit %}
+            <form method="get" action="{{ url_for('view_anketa') }}">
+                <input type="hidden" name="offset" value="{{ offset+limit }}">
+                <button type="submit">Следующие</button>
+            </form>
+        {% endif %}
+        {% else %}
+            <p>Нет доступных анкет</p>
+        {% endif %}
+    </main>
+
+    <footer>
+       <nav><a href="{{ url_for('glav') }}">На главную</a></nav>
+    </footer>
+
+</body>
+</html>
+
+
+
