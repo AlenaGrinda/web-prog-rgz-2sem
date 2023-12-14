@@ -1,58 +1,50 @@
-<!-- view_other_anketa.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Просмотр анкет</title>
+    <title>View Anketa</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='edit.css') }}">
 </head>
 <body>
+    <h1>View Anketa</h1>
 
-    <header>
-            <div class="user-info">
-                <p>{{ session['username'] }}</p>
+    <form method="post" action="{{ url_for('view_anketa') }}">
+        <label for="search_gender">Пол для поиска:</label>
+        <select id="search_gender" name="search_gender">
+            <option value="male">Мужской</option>
+            <option value="female">Женский</option>
+        </select>
+
+        <label for="search_age">Возраст для поиска:</label>
+        <input type="number" id="search_age" name="search_age" placeholder="Введите возраст">
+
+        <button type="submit">Поиск</button>
+    </form>
+
+    <div>
+        <!-- Отображение списка анкет -->
+        {% for anketa in anketa_list %}
+            <div class="anketa">
+                <img style="box-shadow: 3px 4px 5px #000000;" src="{{ url_for('static', filename='photo/' + anketa[4].split('/')[-1]) }}" alt="Photo">
+                <p style="color: aliceblue;font-family: 'Courier New', Courier, monospace; font-size:  40px;text-shadow: 3px 4px 5px  #000000;/* добавлено: тень текста */"><strong></strong> {{ anketa[0] }}</p>
+                <p style="color: aliceblue;font-family: 'Courier New', Courier, monospace; font-size: 30px;text-shadow: 3px 4px 5px  #e472a6;"><strong></strong> {{ anketa[1] }}</p>
+                <p style="color: aliceblue;font-family: 'Courier New', Courier, monospace; font-size: 30px;text-shadow: 3px 4px 5px  #e472a6;"><strong></strong> {{ anketa[2] }}</p>
+                <p style="color: aliceblue;font-family: 'Courier New', Courier, monospace; font-size: 30px;text-shadow: 3px 4px 5px  #e472a6;"><strong></strong> {{ anketa[3] }}</p>
             </div>
-            
-        
-    </header>
+        {% endfor %}
+    </div>
 
-    <main>
-        <h1>H E A R T H U B</h1>
-        <h2>Просмотр анкет</h2>
+     
+    {% if anketa_list|length == limit %}
+        <form method="get" action="{{ url_for('view_anketa') }}">
+            <input type="hidden" name="offset" value="{{ offset+limit }}">
+            <button type="submit">Следующие</button>
+        </form>
+    {% endif %}
 
-        <div class="anketa-container">
-            {% for anketa in anketa_list %}
-                <div class="anketa">
-                    <p>Имя: {{ anketa[0] }}</p>
-                    <p>Возраст: {{ anketa[1] }}</p>
-                    <p>Пол: {{ anketa[2] }}</p>
-                    <p>О себе: {{ anketa[3] }}</p>
-                    <img src="{{ url_for('static', filename='photo/' + anketa[4].split('/')[-1]) }}" alt="photo">
-
-                </div>
-            {% endfor %}
-        </div>
-
-        {% if anketa_list %}
-        {% if anketa_list|length == limit %}
-            <form method="get" action="{{ url_for('view_anketa') }}">
-                <input type="hidden" name="offset" value="{{ offset+limit }}">
-                <button type="submit">Следующие</button>
-            </form>
-        {% endif %}
-        {% else %}
-            <p>Нет доступных анкет</p>
-        {% endif %}
-    </main>
-
-    <footer>
-       <nav><a href="{{ url_for('glav') }}">На главную</a></nav>
-    </footer>
-
+    <form method="get" action="{{ url_for('glav') }}">
+        <button type="submit">На главную</button>
+    </form>
 </body>
 </html>
-
-
-

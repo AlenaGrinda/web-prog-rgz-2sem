@@ -126,8 +126,15 @@ body {
 }
 
 .anketa img {
-    max-width: 100%;
+    max-width: 50%;
     height: auto;
     border-radius: 10px; /* Для круглого изображения */
 }
 
+h1 {
+    text-align: center;
+    color: #ff009d;
+    font-size: 500%; /* изменено: размер текста увеличен */
+    margin-bottom: 40px; /* добавлено: отступ снизу */
+    text-shadow: 3px 4px 5px  rgb(255, 255, 255);/* добавлено: тень текста */
+  }

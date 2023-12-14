@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Form</title>
+    <title>Поиск анкет</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='edit.css') }}">
 </head>
 <body>
     <h1>Поиск анкет</h1>
 
-    
-    <form method="post" action="{{ url_for('search_anketa') }}">
+    <form method="post" action="{{ url_for('search_results') }}">
         <label for="search_gender">Пол для поиска:</label>
         <select id="search_gender" name="search_gender">
             <option value="male">Мужской</option>
             <option value="female">Женский</option>
         </select>
 
+        <label for="search_age">Возраст:</label>
+        <input type="number" id="search_age" name="search_age" placeholder="Введите возраст" required>
+
         <button type="submit">Поиск</button>
     </form>
-
 </body>
 </html>

@@ -1,5 +1,5 @@
 import base64
-from flask import Flask, jsonify, render_template, request, redirect, session, url_for, flash
+from flask import Flask, abort, jsonify, render_template, request, redirect, session, url_for, flash
 from werkzeug.security import check_password_hash
 from passlib.hash import sha256_crypt
 import psycopg2
@@ -7,7 +7,7 @@ import os
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.secret_key = '123'  # Замените на безопасный секретный ключ
+app.secret_key = '123'  
 
 
 UPLOAD_FOLDER = 'static/photo'
@@ -42,24 +42,26 @@ def hash_password(password):
 def verify_password(password, password_hash):
     return sha256_crypt.verify(password, password_hash)
 
+
+
 # Главная страница
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Registration page
+# Страница Регистрации
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
-        # Check for empty values
+        # Проверка пустых значений
         if not username or not password:
             flash('Please fill in all fields', 'error')
             return redirect(url_for('register'))
 
-        # Check if the username already exists
+        # CПроверка на наличие пользователя
         with connect_db() as conn:
             with conn.cursor() as cursor:
                 cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
@@ -69,10 +71,10 @@ def register():
             flash('Username already exists', 'error')
             return redirect(url_for('register'))
 
-        # Hash the password
+        # Хеширование
         hashed_password = sha256_crypt.hash(password)
 
-        # Save the user to the database with the hashed password
+        # Сохранение пароля и имени в бд
         with connect_db() as conn:
             with conn.cursor() as cursor:
                 cursor.execute('INSERT INTO users (username, password) VALUES (%s, %s)', (username, hashed_password))
@@ -321,52 +323,25 @@ def hide_anketa():
 
     return render_template('hide_anketa.html', username=username)
 
-
-def get_anketa_list(username, offset=0, limit=3):
+# Функция для получения данных анкет с учетом фильтров
+def get_filtered_anketa_list(username, search_age=None, search_gender=None, offset=0, limit=3):
     with connect_db() as conn:
         with conn.cursor() as cursor:
-            cursor.execute('''
+            query = """
                 SELECT username, age, gender, about_me, photo
                 FROM questionary
-                WHERE username != %s
+                WHERE username != %s AND is_visible = true
+                    AND (age = %s OR %s IS NULL)
+                    AND (gender = %s OR %s IS NULL)
                 ORDER BY id
                 OFFSET %s LIMIT %s
-            ''', (username, offset, limit))
+            """
+            cursor.execute(query, (username, search_age, search_age, search_gender, search_gender, offset, limit))
             anketa_list = cursor.fetchall()
-            # print(anketa_list[:][4].split('/')[-1])
-
     return anketa_list
 
-
-# @app.route('/search_anketa', methods=['POST'])
-# def search_anketa():
-#     # Получаем данные из формы
-#     search_gender = request.form['search_gender']
-
-#     # Подключаемся к базе данных
-#     connection = psycopg2.connect(**db_config)
-#     cursor = connection.cursor()
-
-#     # Выполняем поиск по полу
-#     query = """
-#         SELECT * FROM anketa
-#         JOIN questionary ON anketa.questionary_id = questionary.id
-#         WHERE questionary.gender = %s
-#     """
-#     cursor.execute(query, (search_gender,))
-
-#     # Получаем результаты
-#     anketa_list = cursor.fetchall()
-
-#     # Закрываем соединение
-#     cursor.close()
-#     connection.close()
-
-#     # Отображаем результаты на странице
-#     return render_template('view_other_anketa.html', anketa_list=anketa_list)
-
 # Роут для просмотра анкет
-@app.route('/view_anketa', methods=['GET', 'POST'])
+@app.route('/view_anketa', methods=['GET'])
 def view_anketa():
     # Проверка, залогинен ли пользователь
     if 'username' not in session:
@@ -374,38 +349,40 @@ def view_anketa():
         return redirect(url_for('login'))
 
     username = session['username']
-
-    # Проверяем, был ли отправлен POST-запрос (например, скрытие анкеты)
-    if request.method == 'POST':
-        # Логика изменения статуса видимости анкеты
-        set_anketa_visibility(username, False)  # Устанавливаем статус видимости в False
-        flash('Анкета успешно скрыта', 'success')
+    offset = int(request.args.get('offset', 0))
+    limit = 3
 
     # Получаем список анкет из базы данных
-    offset = int(request.args.get('offset', 0))
-    limit = 3  # Количество анкет, загружаемых за раз
+    anketa_list = get_filtered_anketa_list(username, offset=offset, limit=limit)
 
-    anketa_list = get_anketa_list(username, offset=offset, limit=limit)
+    return render_template('view_other_anketa.html', anketa_list=anketa_list, offset=offset, limit=limit)
 
-    return render_template('view_other_anketa.html', anketa_list=anketa_list, offset=offset, limit=limit, username=username)
+# Роут для обработки формы фильтрации и загрузки следующих анкет
+@app.route('/filter_anketa', methods=['POST'])
+def filter_anketa():
+    # Проверка, залогинен ли пользователь
+    if 'username' not in session:
+        flash('Для доступа к этой странице войдите в аккаунт', 'error')
+        return redirect(url_for('login'))
 
+    if request.method == 'POST':
+        # Обработайте данные формы и выполние фильтрацию
+        search_gender = request.form['search_gender']
+        search_age = request.form['search_age']
 
+        username = session['username']
+        offset = 0
+        limit = 3
 
-# Функция для получения видимых анкет
-def get_visible_anketa_list(username, offset=0, limit=10):
-    with connect_db() as conn:
-        with conn.cursor() as cursor:
-            # Выбираем анкеты, которые видны и не принадлежат текущему пользователю
-            cursor.execute('''
-                SELECT username, age, gender, about_me, photo
-                FROM questionary
-                WHERE is_visible = TRUE AND username != %s
-                ORDER BY id
-                OFFSET %s LIMIT %s
-            ''', (username, offset, limit))
-            anketa_list = cursor.fetchall()
+        # Получаем список анкет с учетом фильтров
+        anketa_list = get_filtered_anketa_list(username, search_age=search_age, search_gender=search_gender, offset=offset, limit=limit)
 
-    return anketa_list
+        return render_template('view_other_anketa.html', anketa_list=anketa_list, offset=offset, limit=limit)
+    else:
+        # Возвращаем ошибку, если получен GET-запрос
+        return abort(400)
+    
+    
 
 
 
@@ -440,10 +417,5 @@ def delete_account():
         flash('Ваш аккаунт успешно удален', 'success')
         return redirect(url_for('index'))
 
-    return render_template('delete_account.html')  # Создайте шаблон delete_account.html
+    return render_template('delete_account.html')  
 
-# Ваш остальной код Flask-приложения
-
-
-if __name__ == '__main__':
-    app.run(debug=True)

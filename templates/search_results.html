@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результаты поиска</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit.css') }}">
+</head>
+<body>
+    <h1>Результаты поиска</h1>
+
+    {% if search_results %}
+        {% for anketa in search_results %}
+            <div class="anketa">
+                <h2>{{ anketa.username }}</h2>
+                <p>Возраст: {{ anketa.age }}</p>
+                <p>Пол: {{ anketa.gender }}</p>
+                <p>О себе: {{ anketa.about_me }}</p>
+                {% if anketa.photo %}
+                    <img src="{{ url_for('static', filename='photo/' + anketa.photo.split('/')[-1]) }}" alt="Фото анкеты">
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Ничего не найдено</p>
+    {% endif %}
+</body>
+</html>
